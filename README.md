@@ -99,7 +99,7 @@ py bot.py
 
 ## 📬 Contact
 
-Created by **\[Jason C. Klein (Erendreich)]**
+Created by **\[Jason C. Klein (mrxcarl)]**
 Feel free to reach out with questions, bugs, or suggestions via GitHub Issues or Discord.
 
 ---
