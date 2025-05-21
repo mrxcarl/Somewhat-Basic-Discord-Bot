@@ -23,11 +23,13 @@ class Announce(commands.Cog):
         
         # Create the embed
         embed = discord.Embed(
-            title=title,
-            description=message,
-            color=discord.Color.blue()
+            title=f"📢 {title}",
+            description=f"**{message}**",
+            color=discord.Color.green(),
+            timestamp=discord.utils.utcnow()
         )
-        embed.set_footer(text=f"Announcement by {interaction.user.display_name}")
+        embed.set_thumbnail(url="https://cdn-icons-png.flaticon.com/512/561/561127.png")  # Optional icon
+        embed.set_footer(text=f"📣 Announced by {interaction.user.display_name}", icon_url=interaction.user.avatar.url if interaction.user.avatar else None)
         
         # Send the embed to the announcements channel
         await announcements_channel.send(embed=embed)

@@ -11,24 +11,49 @@ class Help(commands.Cog):
 
     @discord.app_commands.command(name="help", description="Lists all available commands with their descriptions")
     async def help(self, interaction: discord.Interaction):
-        # Initialize a list to store command names and descriptions
-        command_list = []
-        
-        # Fetch all commands and their descriptions
-        for command in self.bot.tree.get_commands():
-            command_list.append(f"/{command.name} - {command.description}")
+        await interaction.response.defer()
 
-        # Build the embed with all commands and their descriptions
-        embed = discord.Embed(
-            title="Help - Available Commands",
-            description="Here is a list of all available commands with descriptions:",
-            color=discord.Color.green()
-        )
-        embed.add_field(name="Commands", value="\n".join(command_list), inline=False)
-        embed.set_footer(text="Use /command_name to run any command!")
+        try:
+            command_list = []
+            prefix_commands = []
 
-        # Send the embed
-        await interaction.response.send_message(embed=embed)
+            # Slash commands
+            for command in self.bot.tree.get_commands():
+                command_list.append(f"/{command.name} - {command.description}")
+
+            # Prefix commands
+            for command in self.bot.commands:
+                if isinstance(command, commands.Command):
+                    prefix_commands.append(f"!{command.name} - {command.help or 'No description'}")
+
+            all_commands = sorted(command_list + prefix_commands)
+
+            # Build embed
+            embed = discord.Embed(
+                title="Help - Available Commands",
+                description="Here is a list of all available commands with descriptions:",
+                color=discord.Color.green()
+            )
+
+            # Split the command list into fields of <= 1024 characters
+            field_value = ""
+            field_count = 1
+            for cmd in all_commands:
+                if len(field_value) + len(cmd) + 1 > 1024:
+                    embed.add_field(name=f"Commands ({field_count})", value=field_value, inline=False)
+                    field_value = ""
+                    field_count += 1
+                field_value += cmd + "\n"
+            if field_value:
+                embed.add_field(name=f"Commands ({field_count})", value=field_value, inline=False)
+
+            embed.set_footer(text="Use /command_name or !command_name to run any command!")
+
+            await interaction.followup.send(embed=embed)
+
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            await interaction.followup.send("❌ Something went wrong generating the help list.")
 
 async def setup(bot):
     await bot.add_cog(Help(bot))
