@@ -1,6 +1,6 @@
 # 🎮 Somewhat Basic Discord Bot - Command Reference & Setup Guide
 
-Welcome to the official documentation for the **Discord Bot**!  
+Welcome to the official documentation for the **Somewhat Basic Discord Bot**!  
 This bot includes a variety of utility, moderation, and entertainment commands designed to enhance your server experience.
 
 ---
@@ -43,51 +43,74 @@ yt_dlp==2025.4.30
 py bot.py
 ```
 
----
+## 📜 Commands
 
-## 🛠️ Bot Commands
+### 🎮 General
 
-### 🎱 Fun & Utility
-
-* `/8ball [question]` – Ask the magic 8-ball a question.
-* `/avatar [user]` – Get a user's avatar.
-* `/coinflip` – Flips a coin.
-* `/ping` – Checks the bot's latency.
-* `/say [message]` – Make the bot say whatever you want.
-* `/slap [user]` – Slap a user with a rotting trout!
-* `/tts [message]` – Converts text to speech and plays it in a voice channel.
-
-### 👤 User & Bot Info
-
-* `/about` – Information about the bot and its creator.
-* `/botinfo` – Displays information about the bot.
-* `/userinfo [user]` – Get information about a user.
-* `/invite` – Get an invite link to add the bot to your server.
+| Command     | Description                                           |
+| ----------- | ----------------------------------------------------- |
+| `/8ball`    | Ask the magic 8-ball a question.                      |
+| `/about`    | Information about the bot and its creator.            |
+| `/avatar`   | Get a user's avatar.                                  |
+| `/botinfo`  | Displays information about the bot.                   |
+| `/coinflip` | Flips a coin.                                         |
+| `/github`   | View the bot's GitHub repository.                     |
+| `/help`     | Lists all available commands with their descriptions. |
+| `/invite`   | Get an invite link to add the bot to your server.     |
+| `/ping`     | Checks the bot's latency.                             |
+| `/say`      | Make the bot say whatever you want.                   |
+| `/slap`     | Slap a user with a rotting trout!                     |
+| `/urban`    | Look up a word on Urban Dictionary.                   |
+| `/userinfo` | Get information about a user.                         |
 
 ### 🧹 Moderation
 
-* `/announce [message]` – Send an embedded announcement to the announcements channel. *(Admin only)*
-* `/clear [amount]` – Clear a specified number of messages. *(Requires proper permissions)*
-* `/nickname [name]` – Change the bot's nickname.
-* `/shutdown` – Shutdown the bot. *(Admin only)*
-* `/rehash` – Reload all command modules. *(Developer/Owner only)*
+| Command      | Description                                                                |
+| ------------ | -------------------------------------------------------------------------- |
+| `/announce`  | Send an embedded announcement to the announcements channel. *(Admin only)* |
+| `/clear`     | Clear a specified number of messages.                                      |
+| `/nickname`  | Change the bot's nickname.                                                 |
+| `/nickother` | Change another member's nickname.                                          |
+| `/rehash`    | Reload all command modules.                                                |
+| `/shutdown`  | Shutdown the bot. *(Admin only)*                                           |
 
 ### 🎵 Music
 
-* `/music [song name]` – Play any song by any artist from YouTube in a voice channel.
-* `/play` – Play a local MP3 file in a voice channel.
-* `/stop` – Stops the music and disconnects the bot from the voice channel.
+| Command  | Description                                                                     |
+| -------- | ------------------------------------------------------------------------------- |
+| `/music` | Search YouTube by artist and title, and play the top result in a voice channel. |
+| `/pbl`   | Play a YouTube video in a voice channel by link.                                |
+| `/play`  | Play a local MP3 file in a voice channel.                                       |
+| `/stop`  | Stops the music and disconnects the bot from the voice channel.                 |
+| `/tts`   | Converts text to speech and plays it in a voice channel.                        |
 
-### ✉️ Messaging
+### 💬 Communication & Embeds
 
-* `/pm [user] [message]` – Send a private message to a user.
-* `/suggest [message]` – Submit a suggestion to the bot owner.
+| Command    | Description                                                            |
+| ---------- | ---------------------------------------------------------------------- |
+| `/embed`   | Send a fancy embedded message to this channel.                         |
+| `/imitate` | Send a message that looks like it's from another user using a webhook. |
+| `/pm`      | Send a private message to a user.                                      |
+| `/wpost`   | Post a welcome message in the welcome/welcome-and-rules channel.       |
 
-### 🆘 Help
+### 🕹️ Gaming
 
-* `/help` – Lists all available commands with their descriptions.
+| Command     | Description                             |
+| ----------- | --------------------------------------- |
+| `/playgame` | Announce the game you're about to play. |
+| `/smoke`    | Start or stop a smoke break.            |
 
----
+### 📈 Sports Betting
+
+| Command      | Description                                   |
+| ------------ | --------------------------------------------- |
+| `/add`       | Add a bet to your betslip.                    |
+| `/clearslip` | Clear your entire betslip.                    |
+| `/showoff`   | Show off your betslip to the current channel. |
+| `/showslip`  | Show your current betslip.                    |
+| `/suggest`   | Submit a suggestion to the bot owner.         |
+
+
 
 ## 🤖 Hosting Tips
 
