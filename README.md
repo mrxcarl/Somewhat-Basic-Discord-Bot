@@ -29,12 +29,14 @@ pip install -r requirements.txt
 Your `requirements.txt` should contain the following:
 
 ```
-discord.py==2.4.0
+aiohttp==3.11.11
+config==0.5.1
+discord.py==2.5.2
 gTTS==2.5.4
 Pillow==11.2.1
-psutil==6.1.1
-Requests==2.32.3
-yt_dlp==2025.4.30
+psutil==7.0.0
+Requests==2.32.4
+yt_dlp==2025.6.9
 ```
 
 3. Run the bot:
