@@ -1,112 +1,98 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-import json
-import os
-from datetime import datetime, timezone, timedelta
+from discord.ui import View, Button
+from datetime import datetime
+import asyncio
 
-DATA_FILE = "smoke_data.json"
-
-def load_data():
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "r") as f:
-            return json.load(f)
-    return {}
-
-def save_data(data):
-    with open(DATA_FILE, "w") as f:
-        json.dump(data, f)
-
-class SmokeView(discord.ui.View):
-    def __init__(self, user_id):
+class SmokeView(View):
+    def __init__(self, user_id, smoke_sessions):
         super().__init__(timeout=None)
-        self.user_id = str(user_id)
+        self.user_id = user_id
+        self.smoke_sessions = smoke_sessions
 
-@discord.ui.button(label="⏱️ How long?", style=discord.ButtonStyle.primary)
-async def how_long(self, interaction: discord.Interaction, button: discord.ui.Button):
-    data = load_data()
-    if self.user_id in data:
-        start_time = datetime.fromisoformat(data[self.user_id])
-        now = datetime.now(timezone.utc)
-        delta = now - start_time
-        mins, secs = divmod(int(delta.total_seconds()), 60)
-        hrs, mins = divmod(mins, 60)
+    @discord.ui.button(label="Check Time", style=discord.ButtonStyle.primary)
+    async def check_time(self, interaction: discord.Interaction, button: Button):
+        start_time = self.smoke_sessions.get(str(self.user_id))
+        if not start_time:
+            await interaction.response.send_message("❌ This smoke break is already over.", ephemeral=False)
+            return
 
-        duration_str = f"{hrs}h {mins}m {secs}s" if hrs else f"{mins}m {secs}s"
-
-        user = await interaction.client.fetch_user(int(self.user_id))
-        await interaction.response.send_message(
-            f"🕒 **{user.display_name}** has been on a smoke break for **{duration_str}**.",
-            ephemeral=True
+        duration = datetime.utcnow() - start_time
+        minutes, seconds = divmod(duration.total_seconds(), 60)
+        hours, minutes = divmod(minutes, 60)
+        formatted_duration = (
+            f"{int(hours)}h {int(minutes)}m {int(seconds)}s"
+            if hours > 0 else f"{int(minutes)}m {int(seconds)}s"
         )
-    else:
-        await interaction.response.send_message("❌ This user isn't currently on a smoke break.", ephemeral=True)
+        await interaction.response.send_message(f"⏱️ {interaction.user.mention}, they've been gone for `{formatted_duration}`.", ephemeral=False)
 
 
 class Smoke(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.smoke_sessions = {}
 
     @commands.Cog.listener()
     async def on_ready(self):
         print("✅ Smoke command loaded!")
 
-    @app_commands.command(name="smoke", description="Announce that you're on or off a smoke break")
-    @app_commands.describe(status="Use 'on' to go for a smoke break or 'off' to return.")
+    @app_commands.command(name="smoke", description="Start or stop a smoke break")
+    @app_commands.describe(status="Choose 'on' to start or 'off' to end your break")
     async def smoke(self, interaction: discord.Interaction, status: str):
-        status = status.lower()
-        member = interaction.user
-        guild = interaction.guild
-        user_id = str(member.id)
+        user_id = str(interaction.user.id)
+        general = discord.utils.get(interaction.guild.text_channels, name="general")
 
-        general = discord.utils.get(guild.text_channels, name="general")
-        if not general:
-            await interaction.response.send_message("❌ Couldn't find a #general channel.", ephemeral=True)
-            return
-
-        data = load_data()
-
-        if status == "on":
-            if user_id in data:
-                await interaction.response.send_message("🚬 You're already on a smoke break!", ephemeral=True)
+        if status.lower() == "on":
+            if user_id in self.smoke_sessions:
+                await interaction.response.send_message("🚬 You're already on a smoke break.", ephemeral=True)
                 return
 
-            # Log start time
-            data[user_id] = datetime.now(timezone.utc).isoformat()
-            save_data(data)
+            self.smoke_sessions[user_id] = datetime.utcnow()
 
             embed = discord.Embed(
-                title="🚬 Smoke Break",
-                description=f"{member.mention} is stepping out for a smoke.",
+                title=f"{interaction.user.display_name} is out for a smoke break!",
+                description="☁️ They'll be back soon. Click below to check how long they've been gone.",
                 color=discord.Color.orange()
             )
-            embed.set_thumbnail(url=member.display_avatar.url)
+            embed.set_footer(text="Smoke break started")
+            embed.set_thumbnail(url="https://u.cubeupload.com/mrxcarl/cig.png")
 
-            view = SmokeView(user_id)
-            await general.send(embed=embed, view=view)
-            await interaction.response.send_message("✅ Smoke break started.", ephemeral=True)
+            if general:
+                await general.send(embed=embed, view=SmokeView(user_id, self.smoke_sessions))
 
-        elif status == "off":
-            if user_id not in data:
-                await interaction.response.send_message("❌ You weren't on a smoke break.", ephemeral=True)
+            await interaction.response.send_message("🚬 Smoke break started.", ephemeral=True)
+
+        elif status.lower() == "off":
+            start_time = self.smoke_sessions.get(user_id)
+            if not start_time:
+                await interaction.response.send_message("🚫 You're not currently on a smoke break.", ephemeral=True)
                 return
 
-            # Clear log
-            del data[user_id]
-            save_data(data)
+            duration = datetime.utcnow() - start_time
+            minutes, seconds = divmod(duration.total_seconds(), 60)
+            hours, minutes = divmod(minutes, 60)
+            formatted_duration = (
+                f"{int(hours)}h {int(minutes)}m {int(seconds)}s"
+                if hours > 0 else f"{int(minutes)}m {int(seconds)}s"
+            )
+
+            del self.smoke_sessions[user_id]
 
             embed = discord.Embed(
-                title="🟢 Back from Smoke",
-                description=f"{member.mention} has returned from their smoke break.",
+                title=f"{interaction.user.display_name} is back!",
+                description=f"☁️ Finished their smoke break.\n\n**Duration:** `{formatted_duration}`",
                 color=discord.Color.green()
             )
-            embed.set_thumbnail(url=member.display_avatar.url)
+            embed.set_footer(text="Welcome back!")
+            embed.set_thumbnail(url="https://u.cubeupload.com/mrxcarl/extcig.png")
 
-            await general.send(embed=embed)
-            await interaction.response.send_message("✅ Smoke break ended.", ephemeral=True)
+            if general:
+                await general.send(embed=embed)
 
+            await interaction.response.send_message("🟢 You're marked as back from your break.", ephemeral=True)
         else:
-            await interaction.response.send_message("❌ Use `/smoke on` or `/smoke off`.", ephemeral=True)
+            await interaction.response.send_message("❌ Invalid status. Use `/smoke on` or `/smoke off`.", ephemeral=True)
 
 async def setup(bot):
     await bot.add_cog(Smoke(bot))

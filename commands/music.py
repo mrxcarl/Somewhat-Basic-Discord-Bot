@@ -53,6 +53,7 @@ class Music(commands.Cog):
             vc.stop()
             vc.play(discord.FFmpegPCMAudio(audio_url, before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5"))
 
+
             # Embed
             embed = discord.Embed(
                 title=video_title,
