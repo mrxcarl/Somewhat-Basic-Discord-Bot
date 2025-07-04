@@ -124,17 +124,20 @@ py bot.py
 
 ## 📬 Contact
 
-👤 Created by Jason C. Klein (mrxcarl)
-Feel free to reach out with any questions, bug reports, or feature suggestions via GitHub Issues or contact me directly:
+### 👤 Created by [**Jason C. Klein** *(mrxcarl)*](https://github.com/mrxcarl)
 
-🗨️ Discord: @erendreich
+Feel free to reach out with any **questions**, **bug reports**, or **feature suggestions** via [GitHub Issues](https://github.com/mrxcarl) or contact me directly:
 
-📧 Email: jethro8740@gmail.com
+* 🗨️ **Discord**: `@erendreich`
+* 📧 **Email**: [jethro8740@gmail.com](mailto:jethro8740@gmail.com)
 
-🚀 See the Bot in Action!
-You’re welcome to join one of my servers to try the bot live! It uses slash commands, so simply type /help once you're in.
+---
 
-🔗 Join here: https://discord.gg/WQZpcuHy9s
+### 🚀 See the Bot in Action!
+
+You’re welcome to join one of my servers to try the bot live! It uses **slash commands**, so simply type `/help` once you're in.
+
+🔗 **Join here**: [https://discord.gg/WQZpcuHy9s](https://discord.gg/WQZpcuHy9s)
 
 ---
 
