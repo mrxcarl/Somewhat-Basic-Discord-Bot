@@ -126,6 +126,11 @@ py bot.py
 
 Created by **\[Jason C. Klein (mrxcarl)]**
 Feel free to reach out with questions, bugs, or suggestions via GitHub Issues or Discord.
+You can find me here on github, Discord, or email.
+Discord: @erendreich
+Email: jethro8740@gmail.com
+You can join one of my servers if you'd like to see the bot in action. It uses slash commands so if you type /help, you'll be good to go. Heres the link:
+https://discord.gg/WQZpcuHy9s
 
 ---
 
