@@ -47,72 +47,80 @@ py bot.py
 
 ## 📜 Commands
 
-### 🎮 General
+## Help - Available Commands
 
-| Command     | Description                                           |
-| ----------- | ----------------------------------------------------- |
-| `/8ball`    | Ask the magic 8-ball a question.                      |
-| `/about`    | Information about the bot and its creator.            |
-| `/avatar`   | Get a user's avatar.                                  |
-| `/botinfo`  | Displays information about the bot.                   |
-| `/coinflip` | Flips a coin.                                         |
-| `/github`   | View the bot's GitHub repository.                     |
-| `/help`     | Lists all available commands with their descriptions. |
-| `/invite`   | Get an invite link to add the bot to your server.     |
-| `/ping`     | Checks the bot's latency.                             |
-| `/say`      | Make the bot say whatever you want.                   |
-| `/slap`     | Slap a user with a rotting trout!                     |
-| `/urban`    | Look up a word on Urban Dictionary.                   |
-| `/userinfo` | Get information about a user.                         |
+### Commands (1)
 
-### 🧹 Moderation
+| Command | Description |
+| :--- | :--- |
+| **!help** | Shows this message |
+| **/8ball** | Ask the magic 8-ball a question |
+| **/about** | Information about the bot and its creator |
+| **/add** | Add a bet to your betslip. |
+| **/ai** | Ask the AI a question using a speedy localized version of Gemini |
+| **/alarm** | Set a reminder/alarm. |
+| **/albums** | Select an album to view songs |
+| **/announce** | Send an embedded announcement to the announcements channel (**Admin only**) |
+| **/avatar** | Get a user's avatar |
+| **/botinfo** | Displays information about the bot. |
+| **/clear** | Clear a specified number of messages |
+| **/clearslip** | Clear your entire betslip. |
+| **/coinflip** | Flips a coin |
+| **/dinnerprep** | Start or stop dinner prep status |
+| **/embed** | Send a fancy embedded message to this channel. |
+| **/github** | View the bot's GitHub repository. |
+| **/help** | Lists all available commands with their descriptions |
+| **/imitate** | Send a message that looks like it's from another user using a webhook. |
+| **/invite** | Get an invite link to add the bot to your server. |
+| **/lat** | Check bot latency and Ubisoft server latency |
+| **/mlbbox** | Show today's box score for a given MLB team |
 
-| Command      | Description                                                                |
-| ------------ | -------------------------------------------------------------------------- |
-| `/announce`  | Send an embedded announcement to the announcements channel. *(Admin only)* |
-| `/clear`     | Clear a specified number of messages.                                      |
-| `/nickname`  | Change the bot's nickname.                                                 |
-| `/nickother` | Change another member's nickname.                                          |
-| `/rehash`    | Reload all command modules.                                                |
-| `/shutdown`  | Shutdown the bot. *(Admin only)*                                           |
+---
 
-### 🎵 Music
+### Commands (2)
 
-| Command  | Description                                                                     |
-| -------- | ------------------------------------------------------------------------------- |
-| `/music` | Search YouTube by artist and title, and play the top result in a voice channel. |
-| `/pbl`   | Play a YouTube video in a voice channel by link.                                |
-| `/play`  | Play a local MP3 file in a voice channel.                                       |
-| `/stop`  | Stops the music and disconnects the bot from the voice channel.                 |
-| `/tts`   | Converts text to speech and plays it in a voice channel.                        |
+| Command | Description |
+| :--- | :--- |
+| **/mlbscore** | Show today's MLB scores |
+| **/music** | Search YouTube by artist and title, and play the top result in a voice channel. |
+| **/news** | Get the latest news headlines. |
+| **/nickname** | Change the bot's nickname |
+| **/nickother** | Change another member's nickname. |
+| **/pbl** | Play a YouTube video in a voice channel by link. |
+| **/ping** | Checks the bot's latency |
+| **/play** | Play a local MP3 file in a voice channel. |
+| **/playgame** | Announce the game you're about to play. |
+| **/pm** | Send a private message to a user |
+| **/rehash** | Reload all command modules |
+| **/rps** | Challenge another user to Rock-Paper-Scissors! |
+| **/rpsstats** | Check your Rock-Paper-Scissors stats. |
+| **/say** | Make the bot say whatever you want. |
+| **/setstatus** | Set the bot's status and activity. |
+| **/sgadd** | Add your Splitgate match result. |
+| **/sggraph** | Show a kill/death trend graph for a user. |
+| **/sghistory** | Show the last few Splitgate matches for a user. |
+| **/sgstats** | Show Splitgate stats for a user. |
+| **/showoff** | Show off your betslip to the current channel. |
+| **/showslip** | Show your current betslip. |
 
-### 💬 Communication & Embeds
+---
 
-| Command    | Description                                                            |
-| ---------- | ---------------------------------------------------------------------- |
-| `/embed`   | Send a fancy embedded message to this channel.                         |
-| `/imitate` | Send a message that looks like it's from another user using a webhook. |
-| `/pm`      | Send a private message to a user.                                      |
-| `/wpost`   | Post a welcome message in the welcome/welcome-and-rules channel.       |
+### Commands (3)
 
-### 🕹️ Gaming
-
-| Command     | Description                             |
-| ----------- | --------------------------------------- |
-| `/playgame` | Announce the game you're about to play. |
-| `/smoke`    | Start or stop a smoke break.            |
-
-### 📈 Sports Betting
-
-| Command      | Description                                   |
-| ------------ | --------------------------------------------- |
-| `/add`       | Add a bet to your betslip.                    |
-| `/clearslip` | Clear your entire betslip.                    |
-| `/showoff`   | Show off your betslip to the current channel. |
-| `/showslip`  | Show your current betslip.                    |
-| `/suggest`   | Submit a suggestion to the bot owner.         |
-
-
+| Command | Description |
+| :--- | :--- |
+| **/shutdown** | Shutdown the bot (**Admin only**) |
+| **/slap** | Slap a user with a rotting trout! |
+| **/smoke** | Start or stop a smoke break |
+| **/stop** | Stops the music and disconnects the bot from the voice channel. |
+| **/stop_music** | Stop music and leave the voice channel |
+| **/suggest** | Submit a suggestion to the bot owner. |
+| **/tts** | Converts text to speech and plays it in a voice channel. |
+| **/urban** | Look up a word on Urban Dictionary. |
+| **/userinfo** | Get information about a user. |
+| **/weather** | Get current weather by ZIP code (AccuWeather) |
+| **/win** | Mark one of your bets as won. |
+| **/wpost** | Post a welcome message in the welcome/welcome-and-rules channel |
 
 ## 🤖 Hosting Tips
 
