@@ -51,17 +51,22 @@ py bot.py
 
 ### Commands (1)
 
+## 🛠️ Help - Available Commands
+Use the commands below to interact with the bot's various features.
+
 | Command | Description |
 | :--- | :--- |
 | **!help** | Shows this message |
 | **/8ball** | Ask the magic 8-ball a question |
 | **/about** | Information about the bot and its creator |
 | **/add** | Add a bet to your betslip. |
-| **/ai** | Ask the AI a question using a speedy localized version of Gemini |
 | **/alarm** | Set a reminder/alarm. |
 | **/albums** | Select an album to view songs |
 | **/announce** | Send an embedded announcement to the announcements channel (**Admin only**) |
 | **/avatar** | Get a user's avatar |
+| **/betleaderboard** | Top bettors by profit |
+| **/betstats** | View your betting statistics |
+| **/betwin** | Record a winning bet |
 | **/botinfo** | Displays information about the bot. |
 | **/clear** | Clear a specified number of messages |
 | **/clearslip** | Clear your entire betslip. |
@@ -70,49 +75,36 @@ py bot.py
 | **/embed** | Send a fancy embedded message to this channel. |
 | **/github** | View the bot's GitHub repository. |
 | **/help** | Lists all available commands with their descriptions |
+| **/imggen** | Generate an image using Stable Diffusion Forge |
 | **/imitate** | Send a message that looks like it's from another user using a webhook. |
 | **/invite** | Get an invite link to add the bot to your server. |
 | **/lat** | Check bot latency and Ubisoft server latency |
+| **/mdia** | Announces a new movie or TV series. |
 | **/mlbbox** | Show today's box score for a given MLB team |
-
----
-
-### Commands (2)
-
-| Command | Description |
-| :--- | :--- |
 | **/mlbscore** | Show today's MLB scores |
-| **/music** | Search YouTube by artist and title, and play the top result in a voice channel. |
+| **/music** | Play music from YouTube |
 | **/news** | Get the latest news headlines. |
 | **/nickname** | Change the bot's nickname |
 | **/nickother** | Change another member's nickname. |
+| **/pause** | Pause music |
 | **/pbl** | Play a YouTube video in a voice channel by link. |
 | **/ping** | Checks the bot's latency |
 | **/play** | Play a local MP3 file in a voice channel. |
 | **/playgame** | Announce the game you're about to play. |
 | **/pm** | Send a private message to a user |
 | **/rehash** | Reload all command modules |
+| **/resume** | Resume music |
 | **/rps** | Challenge another user to Rock-Paper-Scissors! |
 | **/rpsstats** | Check your Rock-Paper-Scissors stats. |
 | **/say** | Make the bot say whatever you want. |
 | **/setstatus** | Set the bot's status and activity. |
-| **/sgadd** | Add your Splitgate match result. |
-| **/sggraph** | Show a kill/death trend graph for a user. |
-| **/sghistory** | Show the last few Splitgate matches for a user. |
-| **/sgstats** | Show Splitgate stats for a user. |
 | **/showoff** | Show off your betslip to the current channel. |
 | **/showslip** | Show your current betslip. |
-
----
-
-### Commands (3)
-
-| Command | Description |
-| :--- | :--- |
 | **/shutdown** | Shutdown the bot (**Admin only**) |
 | **/slap** | Slap a user with a rotting trout! |
 | **/smoke** | Start or stop a smoke break |
-| **/stop** | Stops the music and disconnects the bot from the voice channel. |
+| **/split** | Upload a .txt file and split its contents into messages |
+| **/stop** | Stop music |
 | **/stop_music** | Stop music and leave the voice channel |
 | **/suggest** | Submit a suggestion to the bot owner. |
 | **/tts** | Converts text to speech and plays it in a voice channel. |
