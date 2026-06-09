@@ -51,17 +51,20 @@ class Smoke(commands.Cog):
             self.smoke_sessions[user_id] = datetime.utcnow()
 
             embed = discord.Embed(
-                title=f"{interaction.user.display_name} is out for a smoke break!",
-                description="☁️ They'll be back soon. Click below to check how long they've been gone.",
+                title=f"{interaction.user.display_name} is out for a smoke break! 🚬",
+                description="☁️ They'll be back soon.\n\n<@596473752754192407> this is your tag!",
                 color=discord.Color.orange()
             )
-            embed.set_footer(text="Smoke break started")
+            embed.set_footer(text="Smoke break started!")
             embed.set_thumbnail(url="https://u.cubeupload.com/mrxcarl/cig.png")
 
             if general:
                 await general.send(embed=embed, view=SmokeView(user_id, self.smoke_sessions))
 
             await interaction.response.send_message("🚬 Smoke break started.", ephemeral=True)
+
+            # Start reminder task
+            self.bot.loop.create_task(self.reminder_loop(interaction, user_id))
 
         elif status.lower() == "off":
             start_time = self.smoke_sessions.get(user_id)
@@ -80,7 +83,7 @@ class Smoke(commands.Cog):
             del self.smoke_sessions[user_id]
 
             embed = discord.Embed(
-                title=f"{interaction.user.display_name} is back!",
+                title=f"{interaction.user.display_name} is back! 🟢",
                 description=f"☁️ Finished their smoke break.\n\n**Duration:** `{formatted_duration}`",
                 color=discord.Color.green()
             )
@@ -93,6 +96,16 @@ class Smoke(commands.Cog):
             await interaction.response.send_message("🟢 You're marked as back from your break.", ephemeral=True)
         else:
             await interaction.response.send_message("❌ Invalid status. Use `/smoke on` or `/smoke off`.", ephemeral=True)
+
+    async def reminder_loop(self, interaction: discord.Interaction, user_id: str):
+        """Send reminders after 10 minutes, then every 5 minutes until turned off"""
+        await asyncio.sleep(1200)  # wait 20 minutes
+        while user_id in self.smoke_sessions:
+            general = discord.utils.get(interaction.guild.text_channels, name="general")
+            if general:
+                await general.send(f"⏰ Reminder: {interaction.user.mention}, you're still on your smoke break!")
+            await asyncio.sleep(600)  # wait 10 minutes before repeating
+
 
 async def setup(bot):
     await bot.add_cog(Smoke(bot))
