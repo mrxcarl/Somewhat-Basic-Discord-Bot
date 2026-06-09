@@ -98,7 +98,7 @@ class Smoke(commands.Cog):
             await interaction.response.send_message("❌ Invalid status. Use `/smoke on` or `/smoke off`.", ephemeral=True)
 
     async def reminder_loop(self, interaction: discord.Interaction, user_id: str):
-        """Send reminders after 10 minutes, then every 5 minutes until turned off"""
+        """Send reminders after 20 minutes, then every 10 minutes until turned off"""
         await asyncio.sleep(1200)  # wait 20 minutes
         while user_id in self.smoke_sessions:
             general = discord.utils.get(interaction.guild.text_channels, name="general")
