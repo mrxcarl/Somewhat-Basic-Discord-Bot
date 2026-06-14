@@ -1,9 +1,11 @@
 import discord
 from discord.ext import commands
-from gtts import gTTS
+import soundfile as sf
+# Import both KokoroPipeline and PipelineConfig from pykokoro
+from pykokoro import KokoroPipeline, PipelineConfig
 import os
 import asyncio
-import logging # Import the logging module
+import logging
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -11,16 +13,23 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 class TTS(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        logging.info("Initializing Kokoro-82M TTS Pipeline...")
+        
+        # Correct pykokoro syntax: Configuration object must be passed first
+        # Defaulting voice to American English ('af_bella')
+        self.config = PipelineConfig(voice="am_michael")
+        self.pipeline = KokoroPipeline(self.config)
+        
+        logging.info("Kokoro-82M TTS Pipeline initialized successfully.")
 
     @commands.Cog.listener()
     async def on_ready(self):
-        logging.info("✅ TTS command loaded!") # Use logging.info
-        print("✅ TTS command loaded!") # Keep print for immediate console feedback if desired
+        logging.info("✅ TTS command loaded!")
+        print("✅ TTS command loaded!")
 
-    @discord.app_commands.command(name="tts", description="Converts text to speech and plays it in a voice channel.")
+    @discord.app_commands.command(name="tts", description="Converts text to speech using realistic Kokoro-82M and plays it.")
     async def tts(self, interaction: discord.Interaction, text: str):
-        """Plays only the user's text as speech in a voice channel."""
-        
+        """Plays only the user's text as highly realistic speech in a voice channel."""
         logging.info(f"TTS command invoked by {interaction.user.name} ({interaction.user.id}) with text: '{text}'")
 
         # Ensure user is in a voice channel
@@ -31,38 +40,50 @@ class TTS(commands.Cog):
 
         voice_channel = interaction.user.voice.channel
         logging.info(f"User {interaction.user.name} is in voice channel: {voice_channel.name}")
-        vc = discord.utils.get(self.bot.voice_clients, guild=interaction.guild)
-
-        # If already connected, move to the user's channel
-        if vc and vc.is_connected():
-            logging.info(f"Bot already connected to a voice channel, moving to {voice_channel.name}.")
-            await vc.move_to(voice_channel)
-        else:
-            logging.info(f"Bot not connected, connecting to voice channel: {voice_channel.name}")
-            vc = await voice_channel.connect()
 
         # Clean text to remove any potential metadata issues
-        clean_text = text.strip()  # Ensures no leading/trailing spaces
+        clean_text = text.strip()
         if not clean_text:
             logging.warning(f"User {interaction.user.name} provided empty text for TTS.")
             await interaction.response.send_message("⚠️ Please provide text to convert to speech!", ephemeral=True)
             return
 
-        logging.info(f"Generating TTS for cleaned text: '{clean_text}'")
-        # Generate speech file
-        try:
-            tts = gTTS(text=clean_text, lang="en", tld="us")
-            filename = "tts_output.mp3"
-            tts.save(filename)
-            logging.info(f"TTS audio saved to {filename}")
-        except Exception as e:
-            logging.error(f"Error generating or saving TTS file: {e}")
-            await interaction.response.send_message("❌ An error occurred while generating the speech.", ephemeral=True)
-            return
-
-        # Defer response to prevent auto-responses interfering with TTS
+        # Defer response early because model inference takes a brief moment
         await interaction.response.defer()
         logging.info("Interaction response deferred.")
+
+        # Generate unique file per interaction to prevent concurrency overlap issues
+        filename = f"tts_{interaction.id}.wav"
+        logging.info(f"Generating Kokoro TTS for cleaned text: '{clean_text}'")
+        
+        try:
+            # Correct pykokoro generation syntax: use pipe.run()
+            # It extracts speech samples directly into a single result object
+            result = self.pipeline.run(clean_text)
+            
+            # Extract raw audio array and save via soundfile at Kokoro's native 24kHz rate
+            sf.write(filename, result.audio, 24000)
+            logging.info(f"Kokoro TTS audio saved to {filename}")
+        except Exception as e:
+            logging.error(f"Error generating or saving Kokoro TTS file: {e}")
+            await interaction.followup.send("❌ An error occurred while generating the speech.", ephemeral=True)
+            return
+
+        # Handle voice channel connection/movement
+        try:
+            vc = discord.utils.get(self.bot.voice_clients, guild=interaction.guild)
+            if vc and vc.is_connected():
+                logging.info(f"Bot already connected to a voice channel, moving to {voice_channel.name}.")
+                await vc.move_to(voice_channel)
+            else:
+                logging.info(f"Bot not connected, connecting to voice channel: {voice_channel.name}")
+                vc = await voice_channel.connect()
+        except Exception as e:
+            logging.error(f"Error connecting to voice channel: {e}")
+            await interaction.followup.send("❌ Could not connect to your voice channel.", ephemeral=True)
+            if os.path.exists(filename):
+                os.remove(filename)
+            return
 
         # Play the TTS audio
         try:
@@ -71,7 +92,8 @@ class TTS(commands.Cog):
         except Exception as e:
             logging.error(f"Error playing TTS audio: {e}")
             await interaction.followup.send("❌ An error occurred while playing the speech.", ephemeral=True)
-            # Clean up in case of playback error before waiting
+            
+            # Clean up immediately if playback fails to initialize
             if os.path.exists(filename):
                 os.remove(filename)
                 logging.info(f"Removed '{filename}' due to playback error.")
@@ -82,18 +104,20 @@ class TTS(commands.Cog):
 
         # Wait for playback to finish before deleting the file and disconnecting
         while vc.is_playing():
-            await asyncio.sleep(1)
-        logging.info("TTS playback finished, disconnecting from voice channel.")
+            await asyncio.sleep(0.5)
 
+        logging.info("TTS playback finished, disconnecting from voice channel.")
         await vc.disconnect()
 
-        # Clean up the generated file
+        # Clean up the generated file safely
         if os.path.exists(filename):
-            os.remove(filename)
-            logging.info(f"Removed temporary TTS file: {filename}")
+            try:
+                os.remove(filename)
+                logging.info(f"Removed temporary TTS file: {filename}")
+            except Exception as e:
+                logging.error(f"Failed to remove file {filename}: {e}")
         else:
             logging.warning(f"Attempted to remove '{filename}', but it did not exist.")
-
 
 async def setup(bot):
     await bot.add_cog(TTS(bot))
