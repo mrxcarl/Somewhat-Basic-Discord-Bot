@@ -2,20 +2,20 @@ import discord
 from discord.ext import commands
 import os
 import importlib
-
-# Load bot token from config.py
-from config import TOKEN
+import asyncio
+import random
+import datetime
+# Load bot token and other configs from config.py
+from config import TOKEN, CHANNEL_ID
 
 # Enable intents
 intents = discord.Intents.default()
-
 # Initialize bot with slash commands
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # Function to load commands dynamically
 async def load_commands():
     command_dir = "commands"
-    
     for filename in os.listdir(command_dir):
         if filename.endswith(".py") and filename != "__init__.py":
             module_name = f"{command_dir}.{filename[:-3]}"
@@ -30,43 +30,54 @@ async def load_commands():
 @bot.event
 async def on_ready():
     print(f"✅ Logged in as {bot.user}")
-    await bot.tree.sync()  # Sync slash commands with Discord
+    await bot.tree.sync()
     print("✅ Slash commands synced!")
-    for guild in bot.guilds:
-        found_channel = None
-        # Option 1: Try to find a channel named 'general'
-        for channel in guild.text_channels:
-            if channel.name == 'general':
-                found_channel = channel
-                break
-        
-        # Option 2: If 'general' isn't found, try the guild's system channel
-        # The system channel is often the default "welcome" channel
-        if not found_channel and guild.system_channel:
-            found_channel = guild.system_channel
 
-        # Option 3: Fallback to the first text channel the bot has permission to send messages to
-        if not found_channel:
-            for channel in guild.text_channels:
-                if channel.permissions_for(guild.me).send_messages:
-                    found_channel = channel
-                    break
+    # --- Startup Message Logic ---
+    # Now pulling from config.py instead of being hardcoded
+    channel = bot.get_channel(CHANNEL_ID)
 
-        if found_channel:
-            try:
-                await found_channel.send(f'{bot.user.name} is now online!')
-                print(f"Sent online message to {found_channel.name} in {guild.name}")
-            except discord.Forbidden:
-                print(f"Cannot send message to {found_channel.name} in {guild.name} (Missing permissions)")
-            except Exception as e:
-                print(f"Error sending message to {found_channel.name} in {guild.name}: {e}")
-        else:
-            print(f"Could not find a suitable channel to announce in {guild.name}")    
+    if channel:
+        try:
+            with open("startup.txt", "r", encoding="utf-8") as f:
+                announcements = [line.strip() for line in f.readlines() if line.strip()]
+            
+            message_text = random.choice(announcements) if announcements else "Have No Fear, Odahviing is here!"
+            
+            # Create the Embed
+            embed = discord.Embed(
+                title="✨ System Online",
+                description=f"**{message_text}**",
+                color=discord.Color.purple()
+            )
+            embed.add_field(name="Status", value="🟢 Online", inline=True)
+            embed.add_field(name="Host", value="Odahviing", inline=True)
+            embed.set_footer(text="System Reboot Complete")
+            embed.timestamp = datetime.datetime.now()
+
+            # Send the embed
+            sent_msg = await channel.send(embed=embed)
+            print(f"✅ Sent embed message to channel {CHANNEL_ID}")
+
+            # Wait 30 seconds and delete
+            await asyncio.sleep(30)
+            await sent_msg.delete()
+            print(f"🗑️ Deleted startup message from channel {CHANNEL_ID}")
+
+        except FileNotFoundError:
+            print("⚠️ startup.txt not found! Falling back to default embed.")
+            embed = discord.Embed(title="System Online", description="Have No Fear, Odahviing is here!", color=discord.Color.blue())
+            sent_msg = await channel.send(embed=embed)
+            await asyncio.sleep(30)
+            await sent_msg.delete()
+    else:
+        print(f"⚠️ Could not find channel {CHANNEL_ID}")
+    # ------------------------------
 
 # Run bot
 async def main():
     await load_commands()
     await bot.start(TOKEN)
 
-import asyncio
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
